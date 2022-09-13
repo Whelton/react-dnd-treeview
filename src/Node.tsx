@@ -99,8 +99,8 @@ export const Node = <T,>(props: Props): ReactElement | null => {
   // React.ComponentType
   else {
     return (treeContext.listItemComponent as TreeListItemComponentRender<T>)({
-      depth: props.depth,
       item: item,
+      params: params,
       forwardedRef: ref, 
       role: 'listitem',
       children: children

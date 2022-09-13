@@ -832,8 +832,8 @@ var Node = function (props) {
     // React.ComponentType
     else {
         return treeContext.listItemComponent({
-            depth: props.depth,
             item: item,
+            params: params,
             forwardedRef: ref,
             role: 'listitem',
             children: children

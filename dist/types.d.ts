@@ -81,8 +81,8 @@ export declare type TreeStateBase<T> = {
 };
 export declare type TreeListItemComponentRender<T> = (props: TreeListItemComponentProps<T>) => ReactElement;
 export declare type TreeListItemComponentProps<T> = {
-    depth: number;
     item: NodeModel<T>;
+    params: RenderParams;
     forwardedRef: React.RefObject<HTMLElement>;
     role: string;
     children: React.ReactNode;

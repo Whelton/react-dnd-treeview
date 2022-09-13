@@ -137,8 +137,8 @@ export type TreeStateBase<T> = {
 
 export type TreeListItemComponentRender<T> = (props: TreeListItemComponentProps<T> ) => ReactElement;
 export type TreeListItemComponentProps<T> = {
-  depth: number, 
   item: NodeModel<T>,
+  params: RenderParams,
   forwardedRef: React.RefObject<HTMLElement>,
   role: string,
   children: React.ReactNode
