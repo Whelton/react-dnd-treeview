@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   useDrag,
   DragElementWrapper,
@@ -10,6 +10,7 @@ import {
 import { ItemTypes } from "~/ItemTypes";
 import { NodeModel, DragItem, DragSourceElement } from "~/types";
 import { useTreeContext } from "~/hooks";
+import { PlaceholderContext } from "../providers";
 
 let dragSourceElement: DragSourceElement = null;
 
@@ -37,6 +38,7 @@ export const useDragNode = <T>(
   DragElementWrapper<DragPreviewOptions>
 ] => {
   const treeContext = useTreeContext<T>();
+  const placeholderContext = useContext(PlaceholderContext);
 
   useEffect(() => {
     const node = ref.current;
@@ -68,6 +70,27 @@ export const useDragNode = <T>(
     },
     end: (item, monitor) => {
       const dragItem = item as DragItem<T>;
+
+      // If the user drops outside the container, then we can 
+      // still count as a drop based on the last placeholder index.
+      // Taken from: https://github.com/minop1205/react-dnd-treeview/pull/99
+      //
+      // NOTE: This also catches the drags canceled due to the 'Escape' key,
+      // there is no way I found to determine whether a drag was canceled/ended 
+      // due to 'Escape' key or being dragged outside container 
+      // (even with work arounds like seperate listeners and so on).
+      const { cancelOnDropOutside } = treeContext;
+      const { dropTargetId, index } = placeholderContext;
+
+      if (cancelOnDropOutside || monitor.didDrop()) return;
+
+      if (
+        dragItem?.id !== undefined &&
+        dropTargetId !== undefined &&
+        index !== undefined
+      ) {
+        treeContext.onDrop(dragItem, dropTargetId, index);
+      }
 
       if (treeContext.onDragEnd) {
         treeContext.onDragEnd(dragItem, monitor);

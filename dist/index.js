@@ -315,7 +315,7 @@ var TreeProvider = function (props) {
     var monitor = useDragDropManager().getMonitor();
     var canDropCallback = props.canDrop;
     var canDragCallback = props.canDrag;
-    var value = __assign(__assign({ extraAcceptTypes: [], listComponent: "ul", listItemComponent: "li", placeholderComponent: "li", sort: true, insertDroppableFirst: true, dropTargetOffset: 0, initialOpen: false }, props), { openIds: openIds, onDrop: function (dragSource, dropTargetId, index) {
+    var value = __assign(__assign({ extraAcceptTypes: [], listComponent: "ul", listItemComponent: "li", placeholderComponent: "li", sort: true, insertDroppableFirst: true, cancelOnDropOutside: true, dropTargetOffset: 0, initialOpen: false }, props), { openIds: openIds, onDrop: function (dragSource, dropTargetId, index) {
             // if dragSource is null,
             // it means that the drop is from the outside of the react-dnd.
             if (!dragSource) {
@@ -485,6 +485,7 @@ var handleDragStart = function (e) { return register(e); };
 var handleTouchStart = function (e) { return register(e); };
 var useDragNode = function (item, ref) {
     var treeContext = useTreeContext();
+    var placeholderContext = useContext(PlaceholderContext);
     useEffect(function () {
         var node = ref.current;
         node === null || node === void 0 ? void 0 : node.addEventListener("dragstart", handleDragStart);
@@ -507,6 +508,23 @@ var useDragNode = function (item, ref) {
         },
         end: function (item, monitor) {
             var dragItem = item;
+            // If the user drops outside the container, then we can 
+            // still count as a drop based on the last placeholder index.
+            // Taken from: https://github.com/minop1205/react-dnd-treeview/pull/99
+            //
+            // NOTE: This also catches the drags canceled due to the 'Escape' key,
+            // there is no way I found to determine whether a drag was canceled/ended 
+            // due to 'Escape' key or being dragged outside container 
+            // (even with work arounds like seperate listeners and so on).
+            var cancelOnDropOutside = treeContext.cancelOnDropOutside;
+            var dropTargetId = placeholderContext.dropTargetId, index = placeholderContext.index;
+            if (cancelOnDropOutside || monitor.didDrop())
+                return;
+            if ((dragItem === null || dragItem === void 0 ? void 0 : dragItem.id) !== undefined &&
+                dropTargetId !== undefined &&
+                index !== undefined) {
+                treeContext.onDrop(dragItem, dropTargetId, index);
+            }
             if (treeContext.onDragEnd) {
                 treeContext.onDragEnd(dragItem, monitor);
             }

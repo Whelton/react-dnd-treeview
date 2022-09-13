@@ -3,6 +3,7 @@ import React, {
   PropsWithChildren,
   ReactElement,
   createContext,
+  useEffect,
 } from "react";
 import { useDragDropManager } from "react-dnd";
 import {
@@ -47,6 +48,7 @@ export const TreeProvider = <T,>(props: Props<T>): ReactElement => {
     placeholderComponent: "li",
     sort: true,
     insertDroppableFirst: true,
+    cancelOnDropOutside: true,
     dropTargetOffset: 0,
     initialOpen: false,
     ...props,

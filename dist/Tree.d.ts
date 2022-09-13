@@ -8,6 +8,7 @@ declare const Tree: <T = unknown>(props: import("./types").TreeStateBase<T> & {
     placeholderComponent?: React.ElementType<any> | undefined;
     sort?: boolean | import("./types").SortCallback<T> | undefined;
     insertDroppableFirst?: boolean | undefined;
+    cancelOnDropOutside?: boolean | undefined;
     dropTargetOffset?: number | undefined;
     initialOpen?: import("./types").InitialOpen | undefined;
     onChangeOpen?: import("./types").ChangeOpenHandler | undefined;
