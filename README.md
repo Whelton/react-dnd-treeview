@@ -20,6 +20,11 @@ yarn
 # Updates
 # - Dependency Dir
 npm run-script prepublish && yalc push
+
+# When Done 
+# - Project Dir
+yalc remove @minoru/react-dnd-treeview
+# Add back to package.json `"@minoru/react-dnd-treeview": "https://github.com/Whelton/react-dnd-treeview.git",`
 ```
 
 **Misc**
