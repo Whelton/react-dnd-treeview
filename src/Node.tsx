@@ -4,6 +4,7 @@ import React, {
   useContext,
   PropsWithChildren,
   ReactElement,
+  ElementType,
 } from "react";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { Container } from "./Container";
@@ -14,7 +15,7 @@ import {
   useDragControl,
 } from "./hooks";
 import { PlaceholderContext } from "./providers";
-import { NodeModel, RenderParams } from "./types";
+import { NodeModel, RenderParams, TreeListItemComponentRender } from "./types";
 import { isDroppable } from "./utils";
 
 type Props = PropsWithChildren<{
@@ -53,8 +54,6 @@ export const Node = <T,>(props: Props): ReactElement | null => {
 
   const handleToggle = () => treeContext.onToggle(item.id);
 
-  const Component = treeContext.listItemComponent;
-
   let className = classes?.listItem || "";
 
   if (isOver && classes?.dropTarget) {
@@ -79,12 +78,32 @@ export const Node = <T,>(props: Props): ReactElement | null => {
     onToggle: handleToggle,
   };
 
-  return (
-    <Component ref={ref} className={className} role="listitem">
+  const children = (
+    <>
       {treeContext.render(item, params)}
       {open && hasChild && (
         <Container parentId={props.id} depth={props.depth + 1} />
       )}
-    </Component>
-  );
+    </>
+  )
+
+  // ElementType (eg 'li', 'div', etc)
+  if (typeof treeContext.listItemComponent === 'string') {
+    const Component = treeContext.listItemComponent as ElementType
+    return (
+      <Component ref={ref} className={className} role="listitem">
+        {children}
+      </Component>
+    );
+  }
+  // React.ComponentType
+  else {
+    return (treeContext.listItemComponent as TreeListItemComponentRender<T>)({
+      depth: props.depth,
+      item: item,
+      forwardedRef: ref, 
+      role: 'listitem',
+      children: children
+    })
+  }
 };

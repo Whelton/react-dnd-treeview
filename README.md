@@ -5,6 +5,37 @@ You can use render props to create each node freely.
 
 ![react-dnd-treeview](https://user-images.githubusercontent.com/3772820/98293395-94441000-1ff1-11eb-81db-b84c31b03c6b.gif)
 
+## Whelton's Notes
+**Development**
+Use `yalc` for local package dev
+```bash
+# Installing
+# - Dependency Dir
+npm run-script prepublish
+yalc publish
+# - Project Dir
+yalc add @minoru/react-dnd-treeview
+yarn
+
+# Updates
+# - Dependency Dir
+npm run-script prepublish && yalc push
+```
+
+**Misc**
+Removed Storybook dependencies to avoid Chromium dep (120mb), so thats broken
+```
+"@storybook/addon-actions": "^6.5.9",
+"@storybook/addon-docs": "^6.5.9",
+"@storybook/addon-essentials": "^6.5.9",
+"@storybook/addon-interactions": "^6.5.9",
+"@storybook/jest": "^0.0.10",
+"@storybook/react": "^6.5.9",
+"@storybook/test-runner": "^0.5.0",
+"@storybook/testing-library": "^0.0.13",
+"@storybook/testing-react": "1.3.0",
+```
+
 ## Demo and Examples
 
 Some of the examples below use [MUI(Material-UI)](https://mui.com) components, but TreeView does not depend on MUI, so you can use other libraries or your own custom components.

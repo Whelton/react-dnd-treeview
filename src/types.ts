@@ -135,10 +135,19 @@ export type TreeStateBase<T> = {
   onDragEnd?: (node: NodeModel<T>, monitor: DragSourceMonitor) => void;
 };
 
+export type TreeListItemComponentRender<T> = (props: TreeListItemComponentProps<T> ) => ReactElement;
+export type TreeListItemComponentProps<T> = {
+  depth: number, 
+  item: NodeModel<T>,
+  forwardedRef: React.RefObject<HTMLElement>,
+  role: string,
+  children: React.ReactNode
+};
+
 export type TreeState<T> = TreeStateBase<T> & {
   extraAcceptTypes: string[];
   listComponent: ElementType;
-  listItemComponent: ElementType;
+  listItemComponent: TreeListItemComponentRender<T>|ElementType;
   placeholderComponent: ElementType;
   sort: SortCallback<T> | boolean;
   insertDroppableFirst: boolean;
@@ -163,7 +172,7 @@ export type DropOptions<T = unknown> = {
 export type TreeProps<T = unknown> = TreeStateBase<T> & {
   extraAcceptTypes?: string[];
   listComponent?: ElementType;
-  listItemComponent?: ElementType;
+  listItemComponent?: TreeListItemComponentRender<T>|ElementType;
   placeholderComponent?: ElementType;
   sort?: SortCallback<T> | boolean;
   insertDroppableFirst?: boolean;
